@@ -57,10 +57,11 @@ gdal_translate geoTiff_raw.tif output.mbtiles -of MBTILES
 # to create multiple zoom layers, you can then run
 gdaladdo -r average output.mbtiles 2 4 8 16
 ```
-(taken from [gdal's mbtile page](http://www.gdal.org/frmt_mbtiles.html))
+(taken from the bottom of [gdal's mbtile page](http://www.gdal.org/frmt_mbtiles.html))
+
 This should now be easy to import as a shiny new tileset to Mapbox Studio. 
 
-At any stage you can run `gdalinfo [filename]` to view the metadata of the current file (such as information about zoom levels and color bands).
+Helpful Hint: At any stage you can run `gdalinfo [filename]` to view the metadata of the current file (such as information about zoom levels and color bands).
 
 In some cases you may need to first create a mask, but if you prepared the image in QGIS, this should be less of an issue.
 ```sh
