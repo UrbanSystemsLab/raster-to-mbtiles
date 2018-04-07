@@ -7,7 +7,7 @@ If the raster image file is small enough, it may be possible to upload it direct
 ## Primary Method: QGIS Image Preperation + GDAL Translate
 
 ### 1. Setting up Python Environment
-First, prior to using GDAL, it may be necessary to create a python2.7 environment. This will take a few minutes as it may need to install necessary packages.
+First, prior to using GDAL, it may be necessary to create a python2.7 environment. You can read about setting up environments [here](https://conda.io/docs/user-guide/getting-started.html#managing-environments). This will take a few minutes as it may need to install necessary packages.
 ```sh
 conda create -n python2 python=2.7 anaconda
 ```
@@ -47,14 +47,21 @@ Here, it is important to make sure to **select 'Rendered Image' and the correct 
 
 ![](img/QGIS_save.png)
 
+
 ### 2. gdal_translate
 
 From here it is incredibly quick to create mbtiles from your final map. Make sure you are in your python2 environment by running `source activate python2` and then simply run the following:
 
 ```sh
 gdal_translate geoTiff_raw.tif output.mbtiles -of MBTILES
+# to create multiple zoom layers, you can then run
+gdaladdo -r average output.mbtiles 2 4 8 16
 ```
+(taken from the bottom of [gdal's mbtile page](http://www.gdal.org/frmt_mbtiles.html))
+
 This should now be easy to import as a shiny new tileset to Mapbox Studio. 
+
+Helpful Hint: At any stage you can run `gdalinfo [filename]` to view the metadata of the current file (such as information about zoom levels and color bands).
 
 In some cases you may need to first create a mask, but if you prepared the image in QGIS, this should be less of an issue.
 ```sh
@@ -63,18 +70,21 @@ gdal_translate geoTiff_raw.tif -b mask out.tif
 gdal_translate out.tif out.mbtiles -of MBTILES
 ```
 
+
 ## Alternate Approaches 
 
 ### 1. TileMill
-TileMill is a precursor to Mapbox Studio online. Though not in active development, it has shifted to an [open open source](http://openopensource.org/) contributor model.
+TileMill is a precursor to Mapbox Studio online. Though not in active development, it has shifted to an [open open source](http://openopensource.org/) contributor model. 
 
 Raw GeoTiff File
-![tilemill1](img/tilemill_1.png)
-
-GeoTiff Rendered Output Export from QGIS
 ![tilemill1](img/tilemill_2.png)
 
+GeoTiff Rendered Output Export from QGIS
+![tilemill1](img/tilemill_1.png)
+
+
 [Get TileMill here](https://tilemill-project.github.io/tilemill/)
+If it is unable to open (problem on MacOS) check out this [issue](https://github.com/tilemill-project/tilemill/issues/2539).
 
 ### 2. gdal2mbtiles
 Converts GDAL readable datasets into an MBTiles file
@@ -103,3 +113,5 @@ A plugin for the Rasterio CLI that exports a raster dataset to the MBTiles (vers
 
 #### References
 [Adding a color table to one band Tiff](https://gis.stackexchange.com/questions/104196/how-to-add-a-color-table-to-a-one-band-tiff-using-gdal)
+
+For problems installing gdal on Mac [this](https://hackernoon.com/install-python-gdal-using-conda-on-mac-8f320ca36d90) may be helpful. 
